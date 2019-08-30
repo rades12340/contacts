@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://rades12340:godfather09580!@contactkeeper-jlgjg.mongodb.net/contactkeeper?retryWrites=true&w=majority",
+  "jwtSecret": "f84hbffsdf994bjbgfd00fdr454gdeolbmq"
+}
