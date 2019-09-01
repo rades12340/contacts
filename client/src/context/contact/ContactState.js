@@ -1,5 +1,6 @@
 import React, { useReducer } from "react";
 import uuid from "uuid";
+import axios from 'axios'
 import ContactContext from "./contactContext";
 import contactReducer from "./ContactReducer";
 import {
@@ -14,28 +15,17 @@ import {
 
 const ContactState = props => {
   const initialState = {
-    contacts: [
-      {
-        name: "Radisav",
-        email: "rades@gmail.com",
-        phone: "3939-33993-3939"
-      },
-      {
-        name: "Milun",
-        email: "mica@gmail.com",
-        phone: "4324-4343-21321"
-      },
-      {
-        name: "Marko",
-        email: "marko@gmail.com",
-        phone: "96934-5435-423"
-      }
-    ]
+    contacts: []
   };
 
   const [state, dispatch] = useReducer(contactReducer, initialState);
 
   // Add Contact
+  const addContact =(user) => {
+  //  const res = await axios.post('/api/users', user)
+   console.log(initialState)
+    dispatch({type: ADD_CONTACT, payload: user})
+  }
   // Deletet contact
   // Set current contact
   // Clear current contact
@@ -46,7 +36,8 @@ const ContactState = props => {
   return (
     <ContactContext.Provider
       value={{
-        contacts: state.contacts
+        contacts: state.contacts,
+        addContact
       }}
     >
       {props.children}

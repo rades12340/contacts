@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -6,7 +6,10 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import ContactPhone from "@material-ui/icons/ContactPhone";
+import ContactPhoneTwoToneIcon from "@material-ui/icons/ContactPhoneTwoTone";
+import Modal from "../../util/Modal";
+import userContext from "../../context/user/userContext";
+import authContext from "../../context/auth/authContext";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,6 +25,14 @@ const useStyles = makeStyles(theme => ({
 
 const NavBar = () => {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const usercontext = useContext(userContext);
+  const authcontext = useContext(authContext);
+  console.log(authcontext);
+  const { handleClickOpen } = usercontext;
+  const { isAuthenticated, user } = authcontext;
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -32,7 +43,7 @@ const NavBar = () => {
             color="inherit"
             aria-label="menu"
           >
-            <ContactPhone />
+            <ContactPhoneTwoToneIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             Contact Keeper
@@ -44,6 +55,25 @@ const NavBar = () => {
           <Button variant="text" component={Link} color="inherit" to="/about">
             About
           </Button>
+          {isAuthenticated ? (
+            <Button
+              variant="text"
+              // component={Link}
+              color="inherit"
+              onClick={handleClickOpen}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              variant="text"
+              // component={Link}
+              color="inherit"
+              onClick={handleClickOpen}
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>
