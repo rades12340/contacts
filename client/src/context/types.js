@@ -7,6 +7,9 @@ export const FILTER_CONTACTS = "FILTER_CONTACTS";
 export const CLEAR_FILTER = "CLEAR_FILTER";
 export const SET_ALERT = "SET_ALERT";
 export const REMOVE_ALERT = "REMOVE_ALERT";
+export const GET_ALL_CONTACTS = "GET_ALL_CONTACTS";
+export const GET_ERRORS = "GET_ERRORS";
+export const RESET_ERRORS = "RESET_ERRORS";
 
 export const LOGIN_USER = "LOGIN_USER";
 export const SIGNUP_USER = "SIGNUP_USER";

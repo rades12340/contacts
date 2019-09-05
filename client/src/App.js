@@ -13,31 +13,34 @@ import UserState from "./context/user/UserState";
 import Modal from "./util/Modal";
 import setAuthToken from "./util/SetAuthToken";
 import jwtDecode from "jwt-decode";
+import axios from "axios";
 
 const App = () => {
   const authcontext = useContext(authContext);
 
-  const { isAuthenticated, setCurrentUser, logoutUser } = authcontext;
-  if (localStorage.jwtToken) {
-    // Set auth token header auth
-    setAuthToken(localStorage.jwtToken);
-    // Decode token and get user info and exp
-    const decoded = jwtDecode(localStorage.jwtToken);
-    //Set user and isAuthnticated
-    setCurrentUser(decoded);
+  const { isAuthenticated, setCurrentUser, logoutUser, user } = authcontext;
 
-    // Check for expired token
-    const currentTime = Date.now() / 1000;
-    console.log(decoded.exp - currentTime);
-    if (decoded.exp < currentTime) {
-      // Logout user
-      logoutUser();
-      // TODO: Clear current profile
-      // store.dispatch(clearCurrentProfile());
-      // Redirect to login
-      window.location.href = "/login";
+  useEffect(() => {
+    const fetchData = () => {
+      setAuthToken(localStorage.jwtToken);
+      // Decode token and get user info and exp
+      const decoded = jwtDecode(localStorage.jwtToken);
+      //Set user and isAuthnticated
+      setCurrentUser(decoded);
+
+      // Check for expired token
+      const currentTime = Date.now() / 1000;
+      console.log(decoded.exp - currentTime);
+      if (decoded.exp < currentTime) {
+        // Logout user
+        logoutUser();
+      }
+    };
+    if (localStorage.jwtToken) {
+      fetchData();
     }
-  }
+  }, []);
+
   return (
     <ContactState>
       <UserState>

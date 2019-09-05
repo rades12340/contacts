@@ -4,29 +4,40 @@ import {
   SET_CURRENT,
   CLEAR_CURRENT,
   UPDATE_CONTACT,
+  GET_ALL_CONTACTS,
   FILTER_CONTACTS,
-  CLEAR_FILTER
+  CLEAR_FILTER,
+  GET_ERRORS,
+  RESET_ERRORS
 } from "../types";
-import uuid from 'uuid'
+import uuid from "uuid";
 
 const contactReducer = (state, action) => {
   switch (action.type) {
-      
-    case 'ADD_CONTACT':
-    const cont = {
-          ...action.payload,
-          id: uuid()
-      }
+    case "GET_ALL_CONTACTS":
       return {
-          ...state,
-          contacts: [
-              ...state.contacts,
-              cont 
-          ]
+        ...state,
+        contacts: action.payload,
+        loading: false
+      };
+    case "GET_ERRORS":
+      return {
+        ...state,
+        err: action.payload
+      };
+    case "ADD_CONTACT":
+      return {
+        ...state,
+        contacts: [action.payload, ...state.contacts]
+      };
+    case "RESET_ERRORS":
+      return {
+        ...state,
+        err: {}
       };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default contactReducer
+export default contactReducer;

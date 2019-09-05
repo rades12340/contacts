@@ -7,9 +7,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import ContactPhoneTwoToneIcon from "@material-ui/icons/ContactPhoneTwoTone";
-import Modal from "../../util/Modal";
 import userContext from "../../context/user/userContext";
 import authContext from "../../context/auth/authContext";
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,18 +20,20 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  avatar: {
+    margin: 4
   }
 }));
 
 const NavBar = () => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
 
   const usercontext = useContext(userContext);
   const authcontext = useContext(authContext);
-  console.log(authcontext);
+
   const { handleClickOpen } = usercontext;
-  const { isAuthenticated, user } = authcontext;
+  const { isAuthenticated, user, logoutUser } = authcontext;
 
   return (
     <div className={classes.root}>
@@ -56,21 +58,11 @@ const NavBar = () => {
             About
           </Button>
           {isAuthenticated ? (
-            <Button
-              variant="text"
-              // component={Link}
-              color="inherit"
-              onClick={handleClickOpen}
-            >
-              Logout
+            <Button color="inherit" onClick={logoutUser}>
+              <Avatar className={classes.avatar}>H</Avatar>
             </Button>
           ) : (
-            <Button
-              variant="text"
-              // component={Link}
-              color="inherit"
-              onClick={handleClickOpen}
-            >
+            <Button color="inherit" onClick={handleClickOpen}>
               Login
             </Button>
           )}

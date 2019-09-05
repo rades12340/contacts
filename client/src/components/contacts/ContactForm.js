@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
@@ -8,8 +8,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
-import Divider from '@material-ui/core/Divider';
-import contactContext from '../../context/contact/contactContext'
+import Divider from "@material-ui/core/Divider";
+import contactContext from "../../context/contact/contactContext";
+import authContext from "../../context/auth/authContext";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -32,38 +33,53 @@ const useStyles = makeStyles(theme => ({
 
 const ContactForm = () => {
   const classes = useStyles();
+
   const [contact, setContact] = useState({
     name: "",
     email: "",
     phone: "",
-    type: "personal"    
+    type: "personal"
   });
 
-  
-  const contactcontext = useContext(contactContext)
-  const {addContact} = contactcontext
+  const contactcontext = useContext(contactContext);
+  const authcontext = useContext(authContext);
+  const { user } = authcontext;
+  const {
+    addContact,
+    err: { errors }
+  } = contactcontext;
 
-  const { name, email, phone, type } = contact
-  
+  const { name, email, phone, type } = contact;
 
   const onChange = e => {
-    setContact({...contact, [e.target.name]: e.target.value });
+    setContact({ ...contact, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    addContact(contact)
-  }
-
+  const handleSubmit = e => {
+    e.preventDefault();
+    addContact(contact);
+    setContact({
+      name: "",
+      email: "",
+      phone: "",
+      type: "personal"
+    });
+  };
 
   return (
-    <form className={classes.container} noValidate autoComplete="off" onSubmit={handleSubmit}>
+    <form
+      className={classes.container}
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmit}
+    >
       <TextField
         name="name"
-        label="Name"        
+        label="Name"
         style={{ margin: 8 }}
         placeholder="Enter name of contact..."
         fullWidth
+        value={name}
         margin="normal"
         onChange={onChange}
         InputLabelProps={{
@@ -72,7 +88,8 @@ const ContactForm = () => {
       />
       <TextField
         name="email"
-        label="Email"       
+        label="Email"
+        value={email}
         style={{ margin: 8 }}
         placeholder="Enter email of contact..."
         fullWidth
@@ -84,7 +101,8 @@ const ContactForm = () => {
       />
       <TextField
         name="phone"
-        label="Phone"        
+        label="Phone"
+        value={phone}
         style={{ margin: 8 }}
         placeholder="Enter phone of contact..."
         fullWidth
@@ -100,7 +118,7 @@ const ContactForm = () => {
           aria-label="type"
           name="type"
           value={type}
-          className={classes.group}          
+          className={classes.group}
           onChange={onChange}
         >
           <FormControlLabel
@@ -115,10 +133,16 @@ const ContactForm = () => {
           />
         </RadioGroup>
       </FormControl>
-      <Button type="submit" variant="contained" color="primary" className={classes.button} fullWidth={true}>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        fullWidth={true}
+      >
         Submit
       </Button>
-      <Divider/>
+      <Divider />
     </form>
   );
 };

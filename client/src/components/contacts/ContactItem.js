@@ -76,7 +76,7 @@ const ContactItem = ({ contact }) => {
           <Typography className={classes.heading}>{contact.name}</Typography>
           <Chip
             // avatar={<Avatar>{contact.type.charAt(0).toUpperCase() + contact.type.slice(1)}</Avatar>}
-            label={contact.type.charAt(0).toUpperCase() + contact.type.slice(1)}
+            label={`${contact.type[0].toUpperCase()}${contact.type.slice(1)}`}
             className={classes.chip}
             color={contact.type === "professional" ? "primary" : "secondary"}
           />
@@ -126,7 +126,6 @@ const ContactItem = ({ contact }) => {
           </List>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      
     </div>
   );
 };

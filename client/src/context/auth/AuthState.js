@@ -29,29 +29,30 @@ const AuthState = props => {
     try {
       const res = await axios.post("/api/auth", user);
       const { token } = res.data;
+
       localStorage.setItem("jwtToken", token);
       setAuthToken(token);
       const decoded = jwtDecode(token);
-      dispatch(setCurrentUser(decoded));
+      setCurrentUser(decoded);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const setCurrentUser = decoded => {
-    return {
+  function setCurrentUser(decoded) {
+    dispatch({
       type: SET_CURRENT_USER,
       payload: decoded
-    };
-  };
+    });
+  }
 
-  const logoutUser = () => dispatch => {
+  const logoutUser = () => {
     // Remove token from LS
     localStorage.removeItem("jwtToken");
     // Remove auth heade fro future requests
     setAuthToken(false);
     // set ccurrent use to {} which will set isAuthticated to false
-    dispatch(setCurrentUser({}));
+    setCurrentUser({});
   };
 
   return (
