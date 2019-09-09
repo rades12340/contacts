@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
@@ -17,6 +17,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import Button from "@material-ui/core/Button";
 import ListItemText from "@material-ui/core/ListItemText";
 import EditIcon from "@material-ui/icons/Edit";
+import contactContext from "../../context/contact/contactContext";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,8 +59,20 @@ const ContactItem = ({ contact }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
+  const contactcontext = useContext(contactContext);
+
+  const { deleteContact, msg, setCurrentContact } = contactcontext;
+
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  const setCurrentUser = () => {
+    setCurrentContact(contact._id);
+  };
+
+  const delteCnt = () => {
+    deleteContact(contact._id);
   };
   return (
     <div className={classes.root}>
@@ -109,6 +122,7 @@ const ContactItem = ({ contact }) => {
               size="small"
               color="secondary"
               className={classes.button}
+              onClick={delteCnt}
             >
               Delete
               <DeleteIcon className={classes.rightIcon} />
@@ -118,6 +132,7 @@ const ContactItem = ({ contact }) => {
               size="small"
               color="primary"
               className={classes.button}
+              onClick={setCurrentUser}
             >
               Edit
               {/* This Button uses a Font Icon, see the installation instructions in the docs. */}

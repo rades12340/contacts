@@ -30,7 +30,7 @@ const App = () => {
 
       // Check for expired token
       const currentTime = Date.now() / 1000;
-      console.log(decoded.exp - currentTime);
+
       if (decoded.exp < currentTime) {
         // Logout user
         logoutUser();

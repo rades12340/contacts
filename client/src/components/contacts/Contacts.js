@@ -15,7 +15,11 @@ const Contacts = () => {
       getContacts();
     }
   }, [isAuthenticated]);
-
+  // useEffect(() => {
+  //   if (contacts.length > 0) {
+  //     getContacts();
+  //   }
+  // }, [contacts]);
   return (
     <>
       {isAuthenticated ? (

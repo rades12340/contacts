@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import Contacts from "../contacts/Contacts";
 import ContactForm from "../contacts/ContactForm";
-
+import FilterContact from "../contacts/FilterContact";
 
 const Home = () => {
   return (
@@ -14,6 +14,7 @@ const Home = () => {
         <ContactForm />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
+        <FilterContact />
         <Contacts />
       </Grid>
     </Grid>
