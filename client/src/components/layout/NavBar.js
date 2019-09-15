@@ -7,8 +7,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import ContactPhoneTwoToneIcon from "@material-ui/icons/ContactPhoneTwoTone";
-import userContext from "../../context/user/userContext";
+
 import authContext from "../../context/auth/authContext";
+import userContext from "../../context/user/userContext";
 import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +34,7 @@ const NavBar = () => {
   const authcontext = useContext(authContext);
 
   const { handleClickOpen } = usercontext;
-  const { isAuthenticated, user, logoutUser } = authcontext;
+  const { isAuthenticated, logoutUser } = authcontext;
 
   return (
     <div className={classes.root}>
@@ -57,6 +58,16 @@ const NavBar = () => {
           <Button variant="text" component={Link} color="inherit" to="/about">
             About
           </Button>
+          {!isAuthenticated && (
+            <Button
+              variant="text"
+              component={Link}
+              color="inherit"
+              to="/signup"
+            >
+              Signup
+            </Button>
+          )}
           {isAuthenticated ? (
             <Button color="inherit" onClick={logoutUser}>
               <Avatar className={classes.avatar}>H</Avatar>

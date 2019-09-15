@@ -1,24 +1,25 @@
 import React, { useEffect, useContext } from "react";
 import "./App.css";
-import Axios from "axios";
+
 import Container from "@material-ui/core/Container";
 import NavBar from "./components/layout/NavBar";
 import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import userContext from "./context/user/userContext";
+
 import authContext from "./context/auth/authContext";
 import ContactState from "./context/contact/ContactState";
 import UserState from "./context/user/UserState";
 import Modal from "./util/Modal";
 import setAuthToken from "./util/SetAuthToken";
 import jwtDecode from "jwt-decode";
-import axios from "axios";
+import Signup from "./components/pages/Signup";
+import HomePage from "./components/pages/homePage";
 
 const App = () => {
   const authcontext = useContext(authContext);
 
-  const { isAuthenticated, setCurrentUser, logoutUser, user } = authcontext;
+  const { setCurrentUser, logoutUser, isAuthenticated } = authcontext;
 
   useEffect(() => {
     const fetchData = () => {
@@ -50,8 +51,13 @@ const App = () => {
             <NavBar />
             <Container maxWidth="md">
               <Switch>
-                <Route path="/" exact component={Home} />
+                {isAuthenticated ? (
+                  <Route path="/" exact component={Home} />
+                ) : (
+                  <Route path="/" exact component={HomePage} />
+                )}
                 <Route path="/about" exact component={About} />
+                <Route path="/signup" exact component={Signup} />
               </Switch>
             </Container>
           </div>

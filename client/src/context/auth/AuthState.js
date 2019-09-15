@@ -1,41 +1,54 @@
 import React, { useReducer } from "react";
-import uuid from "uuid";
+
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "../../util/SetAuthToken";
 import AuthContext from "./authContext";
 import authReducer from "./AuthReducer";
-import {
-  ADD_CONTACT,
-  DELETE_CONTACT,
-  SET_CURRENT_USER,
-  CLEAR_CURRENT,
-  UPDATE_CONTACT,
-  FILTER_CONTACTS,
-  CLEAR_FILTER,
-  OPEN_MODAL,
-  CLOSE_MODAL
-} from "../types";
+import { SET_CURRENT_USER, GET_ERRORS, RESET_ERRORS } from "../types";
 
 const AuthState = props => {
   const initialState = {
     isAuthenticated: false,
-    user: {}
+    user: {},
+    err: {}
   };
 
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const handleSubmit = async user => {
+  const resetErrors = () => {
+    return {
+      type: RESET_ERRORS
+    };
+  };
+
+  const loginUser = async (user, history) => {
     try {
+      dispatch({ type: RESET_ERRORS });
       const res = await axios.post("/api/auth", user);
       const { token } = res.data;
-
       localStorage.setItem("jwtToken", token);
       setAuthToken(token);
       const decoded = jwtDecode(token);
       setCurrentUser(decoded);
+      history.push("/");
     } catch (err) {
-      console.error(err);
+      getErrors(err.response.data);
+    }
+  };
+
+  const signupUser = async (user, history) => {
+    try {
+      dispatch({ type: RESET_ERRORS });
+      const res = await axios.post("/api/users", user);
+      const { token } = res.data;
+      localStorage.setItem("jwtToken", token);
+      setAuthToken(token);
+      const decoded = jwtDecode(token);
+      setCurrentUser(decoded);
+      history.push("/");
+    } catch (err) {
+      getErrors(err.response.data);
     }
   };
 
@@ -44,6 +57,10 @@ const AuthState = props => {
       type: SET_CURRENT_USER,
       payload: decoded
     });
+  }
+
+  function getErrors(err) {
+    dispatch({ type: GET_ERRORS, payload: err });
   }
 
   const logoutUser = () => {
@@ -60,9 +77,12 @@ const AuthState = props => {
       value={{
         isAuthenticated: state.isAuthenticated,
         user: state.user,
-        handleSubmit,
+        err: state.err,
+        loginUser,
         logoutUser,
-        setCurrentUser
+        setCurrentUser,
+        signupUser,
+        resetErrors
       }}
     >
       {props.children}

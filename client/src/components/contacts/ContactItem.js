@@ -61,7 +61,7 @@ const ContactItem = ({ contact }) => {
 
   const contactcontext = useContext(contactContext);
 
-  const { deleteContact, msg, setCurrentContact } = contactcontext;
+  const { deleteContact, setCurrentContact } = contactcontext;
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);

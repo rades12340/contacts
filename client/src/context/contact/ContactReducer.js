@@ -1,16 +1,3 @@
-import {
-  ADD_CONTACT,
-  DELETE_CONTACT,
-  SET_CURRENT_USER,
-  CLEAR_CURRENT,
-  UPDATE_CONTACT,
-  GET_ALL_CONTACTS,
-  FILTER_CONTACT,
-  CLEAR_FILTER,
-  GET_ERRORS,
-  RESET_ERRORS
-} from "../types";
-
 const contactReducer = (state, action) => {
   switch (action.type) {
     case "GET_ALL_CONTACTS":
@@ -37,7 +24,7 @@ const contactReducer = (state, action) => {
     case "SET_CURRENT_USER":
       return {
         ...state,
-        currentContact: action.payload || undefined
+        currentContact: action.payload
       };
     case "DELETE_CONTACT":
       return {
@@ -55,7 +42,7 @@ const contactReducer = (state, action) => {
     case "FILTER_CONTACT":
       return {
         ...state,
-        contacts: action.payload
+        filteredContacts: action.payload
       };
     default:
       return state;

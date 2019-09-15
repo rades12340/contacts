@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -9,6 +10,8 @@ import Slide from "@material-ui/core/Slide";
 import userContext from "../context/user/userContext";
 import authContext from "../context/auth/authContext";
 import TextField from "@material-ui/core/TextField";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { CLOSE_MODAL } from "../context/types";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,27 +35,62 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AlertDialogSlide() {
+const AlertDialogSlide = ({ history }) => {
   const classes = useStyles();
-  // const [open, setOpen] = useState(false);
+  const [errs, setErrs] = useState();
   const [values, setValues] = useState({ email: "", password: "" });
 
   const usercontext = useContext(userContext);
   const authcontext = useContext(authContext);
 
   const { handleClose, open_modal } = usercontext;
-  const { handleSubmit } = authcontext;
+  const {
+    loginUser,
+    err: { errors },
+    resetErrors,
+    isAuthenticated
+  } = authcontext;
 
   const onChange = e => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const handleSubmmit = e => {
+  const handleSubmmit = async e => {
     e.preventDefault();
-    console.log(values);
-    handleSubmit(values);
-    handleClose();
+    try {
+      resetErrors();
+      await loginUser(values, history);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  useEffect(() => {
+    if (errors && errors.length > 0) {
+      let err = {};
+      for (let i = 0; i < errors.length; i++) {
+        if (errors[i].param === "email") {
+          err.email = errors[i].msg;
+        }
+        if (errors[i].param === "password") {
+          err.password = errors[i].msg;
+        }
+      }
+      setErrs(err);
+    }
+  }, [errors]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      handleClose();
+    } else {
+      handleClose();
+      setErrs();
+    }
+  }, [isAuthenticated]);
+
+  const errEmail = Boolean(errs && errs.email);
+  const errPassword = Boolean(errs && errs.password);
 
   return (
     <div>
@@ -73,11 +111,11 @@ export default function AlertDialogSlide() {
             autoComplete="off"
           >
             <TextField
+              error={errEmail}
               name="email"
               label="Email"
               style={{ margin: 8 }}
               placeholder="Placeholder"
-              helperText="Full width!"
               fullWidth
               margin="normal"
               onChange={onChange}
@@ -85,12 +123,21 @@ export default function AlertDialogSlide() {
                 shrink: true
               }}
             />
+            {errEmail && (
+              <FormHelperText
+                id="email"
+                style={{ color: "red", marginLeft: "0.5rem", marginTop: "0px" }}
+              >
+                {errs.email}
+              </FormHelperText>
+            )}
             <TextField
+              error={errPassword}
+              id="password"
               name="password"
               label="Password"
               style={{ margin: 8 }}
               placeholder="Placeholder"
-              helperText="Full width!"
               fullWidth
               type="password"
               margin="normal"
@@ -99,13 +146,21 @@ export default function AlertDialogSlide() {
                 shrink: true
               }}
             />
-            <DialogActions>
-              <Button
-                type="submit"
-                onClick={handleClose}
-                color="primary"
-                autoFocus
+            {errPassword && (
+              <FormHelperText
+                id="password"
+                style={{
+                  color: "red",
+                  marginLeft: "0.5rem",
+                  marginTop: "0px",
+                  lineHeight: "12px"
+                }}
               >
+                {errs.password}
+              </FormHelperText>
+            )}
+            <DialogActions>
+              <Button type="submit" color="primary" autoFocus>
                 Agree
               </Button>
             </DialogActions>
@@ -114,4 +169,6 @@ export default function AlertDialogSlide() {
       </Dialog>
     </div>
   );
-}
+};
+
+export default withRouter(AlertDialogSlide);

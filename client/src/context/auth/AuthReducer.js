@@ -1,16 +1,5 @@
-import {
-  ADD_CONTACT,
-  DELETE_CONTACT,
-  SET_CURRENT_USER,
-  CLEAR_CURRENT,
-  UPDATE_CONTACT,
-  FILTER_CONTACTS,
-  CLEAR_FILTER,
-  OPEN_MODAL,
-  CLOSE_MODAL
-} from "../types";
-import uuid from "uuid";
 import isEmpty from "../../util/isEmpty";
+import { SET_CURRENT_USER, GET_ERRORS, RESET_ERRORS } from "../types";
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -19,6 +8,16 @@ const authReducer = (state, action) => {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload
+      };
+    case "GET_ERRORS":
+      return {
+        ...state,
+        err: action.payload
+      };
+    case "RESET_ERRORS":
+      return {
+        ...state,
+        err: {}
       };
     default:
       return state;

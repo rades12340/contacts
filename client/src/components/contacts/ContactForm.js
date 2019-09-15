@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
+
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
@@ -11,8 +11,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import contactContext from "../../context/contact/contactContext";
-import authContext from "../../context/auth/authContext";
-import { checkPropTypes } from "prop-types";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -25,8 +23,7 @@ const useStyles = makeStyles(theme => ({
     width: 200
   },
   formControl: {
-    margin: theme.spacing(1),
-    margin: 8
+    margin: theme.spacing(1)
   },
   group: {
     margin: theme.spacing(1, 0)
@@ -50,8 +47,7 @@ const ContactForm = () => {
   const typeRef = useRef(contact.type);
 
   const contactcontext = useContext(contactContext);
-  const authcontext = useContext(authContext);
-  const { user } = authcontext;
+
   const {
     addContact,
     err: { errors },
@@ -94,11 +90,11 @@ const ContactForm = () => {
   }, [errors]);
 
   const clearContact = async () => {
-    await clearCurrentContact();
-    nameRef.current.value = currentContact.name;
-    emailRef.current.value = currentContact.email;
-    phoneRef.current.value = currentContact.phone;
-    typeRef.current.label = currentContact.type;
+    // await clearCurrentContact();
+    nameRef.current.value = "";
+    emailRef.current.value = "";
+    phoneRef.current.value = "";
+    typeRef.current.label = "personal";
     setContact({
       name: nameRef.current.value,
       email: emailRef.current.value,
@@ -119,12 +115,12 @@ const ContactForm = () => {
         phone: phoneRef.current.value,
         type: typeRef.current.label
       });
-      clearContact();
     }
   }, [currentContact]);
 
   const updateCont = () => {
     updateContact(contact);
+    clearContact();
   };
   // console.log(currentContact);
   const errName = Boolean(errs && errs.name);
@@ -250,7 +246,10 @@ const ContactForm = () => {
             color="secondary"
             className={classes.button}
             fullWidth={true}
-            onClick={clearContact}
+            onClick={() => {
+              clearCurrentContact();
+              clearContact();
+            }}
           >
             Clear Contact
           </Button>
@@ -259,10 +258,6 @@ const ContactForm = () => {
       <Divider />
     </form>
   );
-};
-
-ContactForm.propTypes = {
-  error: PropTypes.string
 };
 
 export default ContactForm;

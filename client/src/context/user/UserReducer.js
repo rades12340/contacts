@@ -1,16 +1,4 @@
-import {
-  ADD_CONTACT,
-  DELETE_CONTACT,
-  SET_CURRENT_USER,
-  CLEAR_CURRENT,
-  UPDATE_CONTACT,
-  FILTER_CONTACTS,
-  CLEAR_FILTER,
-  OPEN_MODAL,
-  CLOSE_MODAL
-} from "../types";
-import uuid from "uuid";
-import isEmpty from "../../util/isEmpty";
+// import { OPEN_MODAL, CLOSE_MODAL } from "../types";
 
 const userReducer = (state, action) => {
   switch (action.type) {

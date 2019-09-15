@@ -1,10 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 
-const theme = {
-  spacing: [0, 2, 3, 5, 8]
-};
-
 const Login = () => {
   return (
     <div>

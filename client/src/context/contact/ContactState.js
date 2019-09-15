@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import uuid from "uuid";
+
 import axios from "axios";
 import ContactContext from "./contactContext";
 import contactReducer from "./ContactReducer";
@@ -17,6 +17,7 @@ import {
 const ContactState = props => {
   const initialState = {
     contacts: [],
+    filteredContacts: [],
     currentContact: undefined,
     err: {},
     msg: undefined
@@ -61,7 +62,9 @@ const ContactState = props => {
   // Set current contact
   const setCurrentContact = async userId => {
     try {
-      const res = state.contacts.filter(contact => contact._id === userId)[0];
+      const res = await state.contacts.filter(
+        contact => contact._id === userId
+      )[0];
 
       dispatch({ type: SET_CURRENT_USER, payload: res });
     } catch (err) {
@@ -71,7 +74,7 @@ const ContactState = props => {
   // Clear current contact
   const clearCurrentContact = async () => {
     try {
-      dispatch({ type: SET_CURRENT_USER });
+      dispatch({ type: SET_CURRENT_USER, payload: undefined });
     } catch (err) {
       console.log(err);
     }
@@ -89,6 +92,7 @@ const ContactState = props => {
         const newContacts = state.contacts.filter(
           contact => contact._id !== res.data._id
         );
+
         const newConts = [res.data, ...newContacts];
 
         dispatch({ type: UPDATE_CONTACT, payload: newConts });
@@ -99,19 +103,17 @@ const ContactState = props => {
     }
   };
   // Filter contacts
-
-  const filterContact = (cont, initContacts) => {
+  const filterContact = cont => {
+    const contacts = [...state.contacts];
     let users = [];
     if (cont) {
-      initContacts.map(contact => {
+      contacts.map(contact => {
         if (contact.name.toLowerCase().indexOf(cont.toLowerCase()) > -1) {
           return users.push(contact);
         } else {
           return users;
         }
       });
-    } else {
-      getContacts();
     }
     dispatch({ type: FILTER_CONTACT, payload: users });
   };
@@ -130,7 +132,8 @@ const ContactState = props => {
         clearCurrentContact,
         updateContact,
         currentContact: state.currentContact,
-        filterContact
+        filterContact,
+        filteredContacts: state.filteredContacts
       }}
     >
       {props.children}
